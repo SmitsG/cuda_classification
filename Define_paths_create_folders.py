@@ -8,26 +8,17 @@ def main():
     path_list = define_paths(root_path_tuberculose_images_divided)
     create_folders(path_list)
 
+    train_paths = define_paths(path_base=root_path_tuberculose_images_divided, step="Train")
+    test_paths = define_paths(path_base=root_path_tuberculose_images_divided, step="Test")
+    valid_paths = define_paths(path_base=root_path_tuberculose_images_divided, step="Valid")
 
-def define_paths(root_path_tuberculose_images_divided):
-    # Define all the paths for testing
-    test_path = os.path.join(root_path_tuberculose_images_divided, "Test")
-    test_path_positive = os.path.join(test_path, "Positive_TB")
-    test_path_negative = os.path.join(test_path, "Negative_TB")
 
-    # Define all the paths for validating
-    valid_path = os.path.join(root_path_tuberculose_images_divided, "Valid")
-    valid_path_positive = os.path.join(valid_path, "Positive_TB")
-    valid_path_negative = os.path.join(valid_path, "Negative_TB")
+def define_paths(path_base, step):
+    step_path = os.path.join(path_base, step)
+    base_path_positive = os.path.join(step_path, "Positive_TB")
+    base_path_negative = os.path.join(step_path, "Negative_TB")
 
-    # Define all the paths for training
-    train_path = os.path.join(root_path_tuberculose_images_divided, "Train")
-    train_path_positive = os.path.join(train_path, "Positive_TB")
-    train_path_negative = os.path.join(train_path, "Negative_TB")
-
-    # Add all the paths to a list
-    path_list = [root_path_tuberculose_images_divided, test_path, test_path_positive, test_path_negative, valid_path,
-                 valid_path_positive, valid_path_negative, train_path, train_path_positive, train_path_negative]
+    path_list = [step_path, base_path_negative, base_path_positive]
     return path_list
 
 
