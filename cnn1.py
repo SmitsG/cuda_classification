@@ -28,7 +28,7 @@ test_path = 'test'
 
 train_batches = ImageDataGenerator().flow_from_directory(train_path, target_size=(224,224), classes=['Positive_TB', 'Negative_TB'], batch_size=10)
 valid_batches = ImageDataGenerator().flow_from_directory(valid_path, target_size=(224,224), classes=['Positive_TB', 'Negative_TB'], batch_size=4)
-test_batches = ImageDataGenerator().flow_from_directory(test_path, target_size=(224,224), classes=['Positive_TB', 'Negative_TB'], batch_size=10)
+test_batches = ImageDataGenerator().flow_from_directory(test_path, target_size=(224,224), classes=['Positive_TB', 'Negative_TB'], batch_size=100)
 
 def plots(ims, figsize=(12,6), rows=1, interp=False, titles=None):
     if type(ims[0]) is np.ndarray:
@@ -59,8 +59,8 @@ model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accurac
 
 model.summary()
 #steps is het aantal batches, stel 30 afbeeldingen, batch_size = 10 --> 3 steps
-model.fit_generator(train_batches, steps_per_epoch=30, 
-                    validation_data=valid_batches, validation_steps=15, epochs=5, verbose=2)
+model.fit_generator(train_batches, steps_per_epoch=33, 
+                    validation_data=valid_batches, validation_steps=16, epochs=5, verbose=2)
 
 #Predict
 test_imgs, test_labels = next(test_batches)
@@ -68,8 +68,7 @@ plots(test_imgs, titles=test_labels)
 
 test_labels = test_labels[:,0]
 test_labels
-
-predictions = model.predict_generator(test_batches, steps=15, verbose=0)
+predictions = model.predict_generator(test_batches, steps=1, verbose=0)
 predictions
 
 cm = confusion_matrix(test_labels, predictions[:,0])
@@ -103,7 +102,7 @@ def plot_confusion_matrix(cm, classes,
                  horizontalalignment="center",
                  color="white" if cm[i, j] > thresh else "black")
 
-    plt.tight_layout()
+ #  plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     
@@ -111,6 +110,10 @@ cm_plot_labels = ['Negative_TB','Positive_TB']
 plot_confusion_matrix(cm, cm_plot_labels, title='Confusion Matrix')
 
 # Build Fine-tuned VGG16 model
+#een kleinere test_batch omdat mijn(Valerie) laptop het niet aan kan bij vgg16
+test_batches = ImageDataGenerator().flow_from_directory(test_path, target_size=(224,224), classes=['Positive_TB', 'Negative_TB'], batch_size=10)
+
+
 vgg16_model = keras.applications.vgg16.VGG16()
 vgg16_model.summary()
 
@@ -133,8 +136,8 @@ model.summary()
 
 #Train the fine-tuned VGG16 model
 model.compile(Adam(lr=.0001), loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit_generator(train_batches, steps_per_epoch=30, 
-                    validation_data=valid_batches, validation_steps=15, epochs=5, verbose=2)
+model.fit_generator(train_batches, steps_per_epoch=33, 
+                    validation_data=valid_batches, validation_steps=16, epochs=5, verbose=2)
 
 #old model results
 #model.fit_generator(train_batches, steps_per_epoch=4, 
@@ -146,8 +149,7 @@ plots(test_imgs, titles=test_labels)
 
 test_labels = test_labels[:,0]
 test_labels
-
-predictions = model.predict_generator(test_batches, steps=15, verbose=0)
+predictions = model.predict_generator(test_batches, steps=1, verbose=0)
 cm = confusion_matrix(test_labels, np.round(predictions[:,0]))
 cm_plot_labels = ['Negative_TB','Positive_TB']
 plot_confusion_matrix(cm, cm_plot_labels, title='Confusion Matrix')
