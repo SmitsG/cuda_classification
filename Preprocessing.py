@@ -11,10 +11,10 @@ def main():
     args = argument_parser.parse_args()
 
     # This path is command line input from the user. This is the root for the filetree of the processed images
-    root_path_tuberculose_images_divided = args.path_pi
+    root_path_tuberculose_images_divided = args.path_target
 
-    # This path is command line input from the user. This is where the downloaded raw images should be stored
-    image_origin = args.path_ri
+    # This path is command line input from the user. This is where the downloaded raw images are stored right now
+    image_origin = args.path_source
 
     # Define the paths for training, validating and testing
     train_paths = define_paths(path_base=root_path_tuberculose_images_divided, step="Train")
