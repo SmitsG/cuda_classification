@@ -13,13 +13,13 @@ def parse_args():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # ------------------------------------------Main information-------------------------------------------------------
-    parser.add_argument("--path_pi",
+    parser.add_argument("--path_target",
                         type=str,
                         required=True,
                         default=r"/home/silvie/Pictures/Tuberculose_images_divided",
                         help="This is the root for the filetree of the processed images.")
 
-    parser.add_argument("--path_ri",
+    parser.add_argument("--path_source",
                         type=str,
                         required=True,
                         default=r"/home/silvie/Pictures/ChinaSet_AllFiles/CXR_png",
